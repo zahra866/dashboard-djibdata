@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard DGI – Djib Data-AI Consulting</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--blue:#185FA5;--blue-light:#E6F1FB;--blue-mid:#378ADD;--green:#27500A;--amber-dark:#633806;--red-dark:#791F1F;--gray-bg:#f5f6fa;--border:#e5e7eb;--text:#111827;--text2:#6b7280;--white:#fff;--radius:14px;--rsm:8px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--gray-bg);color:var(--text);font-size:14px;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.app{width:390px;height:844px;background:var(--gray-bg);border-radius:40px;border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.12)}
+.topbar{background:var(--white);padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.av{width:38px;height:38px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;cursor:pointer;transition:transform .15s}
+.av:active{transform:scale(.92)}
+.scroll{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth}
+.scroll::-webkit-scrollbar{width:0}
+.slbl{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mc{background:var(--white);border-radius:var(--radius);padding:14px 16px;border:1px solid var(--border);cursor:pointer;transition:transform .18s;overflow:hidden}
+.mc:active{transform:scale(.96)}
+.mac{width:30px;height:4px;border-radius:2px;margin-bottom:10px}
+.mv{font-size:22px;font-weight:800;letter-spacing:-.4px}
+.ml{font-size:11px;color:var(--text2);margin-top:3px;font-weight:500}
+.md{font-size:11px;font-weight:600;margin-top:6px}
+.cscroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x mandatory}
+.cscroll::-webkit-scrollbar{height:0}
+.cpill{flex-shrink:0;scroll-snap-align:start;background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;min-width:150px;cursor:pointer;transition:transform .18s,border-color .18s}
+.cpill:active{transform:scale(.96)}
+.cpill.sel{border-color:var(--blue-mid);background:var(--blue-light)}
+.cdot{width:8px;height:8px;border-radius:50%;margin-bottom:8px}
+.cn{font-size:13px;font-weight:700}
+.cv{font-size:20px;font-weight:800;margin:4px 0}
+.cp{font-size:11px;font-weight:600}
+.pw{margin-top:8px;height:4px;background:#eee;border-radius:2px;overflow:hidden}
+.pf{height:100%;border-radius:2px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.card{background:var(--white);border-radius:var(--radius);padding:16px;border:1px solid var(--border)}
+.ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+.ct{font-size:13px;font-weight:700}
+.chips{display:flex;gap:6px}
+.chip{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;cursor:pointer;transition:background .15s,color .15s;border:1px solid var(--border);background:var(--white);color:var(--text2)}
+.chip.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.mbars{display:flex;align-items:flex-end;gap:3px;height:46px}
+.mbar{border-radius:3px 3px 0 0;transition:height .55s cubic-bezier(.4,0,.2,1),background .3s;cursor:pointer}
+.mbar:hover{opacity:.75}
+.xlbls{display:flex;justify-content:space-between;margin-top:6px}
+.xl{font-size:10px;color:var(--text2)}
+.lgrow{display:flex;align-items:center;gap:6px;margin-top:9px;font-size:11px;color:var(--text2)}
+.ldot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.txlist{display:flex;flex-direction:column;gap:8px}
+.txi{background:var(--white);border-radius:var(--rsm);padding:12px 14px;border:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .15s}
+.txi:active{transform:scale(.98)}
+.txic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.txin{flex:1;min-width:0}
+.txn{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.txs{font-size:11px;color:var(--text2);margin-top:2px}
+.txr{text-align:right;flex-shrink:0}
+.txa{font-size:13px;font-weight:800}
+.txb{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;margin-top:3px;display:inline-block}
+.acard{border-radius:var(--rsm);padding:12px 14px;display:flex;align-items:flex-start;gap:10px;cursor:pointer;transition:transform .15s}
+.acard:active{transform:scale(.98)}
+.at{font-size:12px;font-weight:500;line-height:1.5;color:#111}
+.as{font-size:11px;margin-top:2px;color:var(--text2);font-weight:500}
+.pitem{display:flex;align-items:center;gap:10px}
+.pname{font-size:12px;font-weight:700;min-width:78px}
+.pbw{flex:1;height:6px;background:#eee;border-radius:3px;overflow:hidden}
+.pbf{height:100%;border-radius:3px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.ppct{font-size:12px;font-weight:800;min-width:34px;text-align:right}
+.page{display:none;flex-direction:column;flex:1;overflow:hidden}
+.page.on{display:flex;animation:si .22s cubic-bezier(.4,0,.2,1)}
+@keyframes si{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fab{position:absolute;bottom:80px;right:18px;width:50px;height:50px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .2s;box-shadow:0 4px 14px rgba(24,95,165,.35);z-index:10}
+.fab:active{transform:scale(.90)}
+.toast{position:absolute;top:72px;left:50%;transform:translateX(-50%) translateY(-8px);background:#111;color:#fff;font-size:12px;font-weight:600;padding:8px 18px;border-radius:20px;opacity:0;transition:opacity .28s,transform .28s;pointer-events:none;white-space:nowrap;z-index:20}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.bnav{background:var(--white);border-top:1px solid var(--border);display:flex;padding:8px 0 20px;flex-shrink:0}
+.ntab{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:4px 0}
+.ntab:active{opacity:.6}
+.nlbl{font-size:10px;font-weight:700;transition:color .2s}
+.ndot{position:absolute;top:-2px;right:-3px;width:7px;height:7px;border-radius:50%;background:#E24B4A;border:1.5px solid var(--gray-bg)}
+.frow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.irow{display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid #e5e7eb}
+.irow:last-child{border-bottom:none}
+.ik{color:var(--text2)}
+.iv{font-weight:700;text-align:right}
+.fitem{background:var(--white);border:1px solid var(--border);border-radius:var(--rsm);padding:10px 13px;display:flex;align-items:center;gap:9px}
+.fdot{width:7px;height:7px;border-radius:50%;background:var(--blue);flex-shrink:0}
+.lex-box{background:var(--white);border-radius:var(--radius);border:1px solid #e5e7eb;overflow:hidden}
+.lex-row{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 16px;border-bottom:1px solid #e5e7eb;gap:12px}
+.lex-row:last-child{border-bottom:none}
+.lex-term{font-size:13px;font-weight:800;color:#185FA5;flex-shrink:0;min-width:65px}
+.lex-def{font-size:12px;color:#6b7280;text-align:right;line-height:1.5}
+.spacer{height:80px;flex-shrink:0}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="toast" id="toast"></div>
+
+<div class="topbar">
+  <div>
+    <div style="font-size:11px;color:var(--text2);font-weight:500">Bonjour, Zahra 👋</div>
+    <div style="font-size:18px;font-weight:800;letter-spacing:-.3px">Dashboard DGI</div>
+  </div>
+  <div class="av" onclick="showToast('Zahra Aden Houssein – BTS SIO SLAM')">ZA</div>
+</div>
+
+<!-- PAGE ACCUEIL -->
+<div id="p-home" class="page on">
+<div class="scroll">
+  <div>
+    <div class="slbl">Vue globale · S1 2025</div>
+    <div class="mgrid">
+      <div class="mc" onclick="showToast('Total recettes S1 2025')"><div class="mac" style="background:#378ADD"></div><div class="mv" id="m1">0</div><div class="ml">Total recettes (M DJF)</div><div class="md" style="color:var(--green)">↑ +14% vs 2024</div></div>
+      <div class="mc" onclick="showToast('Transactions enregistrées')"><div class="mac" style="background:#1D9E75"></div><div class="mv" id="m2">0</div><div class="ml">Transactions</div><div class="md" style="color:var(--green)">↑ +9% ce mois</div></div>
+      <div class="mc" onclick="showToast('Taux moyen de réalisation')"><div class="mac" style="background:#BA7517"></div><div class="mv" id="m3">0%</div><div class="ml">Taux objectifs</div><div class="md" style="color:var(--green)">↑ Bonne trajectoire</div></div>
+      <div class="mc" onclick="showToast('Fraudes détectées ce semestre')"><div class="mac" style="background:#E24B4A"></div><div class="mv">14</div><div class="ml">Fraudes détectées</div><div class="md" style="color:var(--red-dark)">↓ À traiter</div></div>
+    </div>
+  </div>
+  <div>
+    <div class="slbl">Canaux fiscaux — glisser →</div>
+    <div class="cscroll">
+      <div class="cpill sel" onclick="selCanal(this,'e-Timbre')"><div class="cdot" style="background:#378ADD"></div><div class="cn">e-Timbre</div><div class="cv">135 M</div><div class="cp" style="color:var(--green)">90% objectif</div><div class="pw"><div class="pf" style="width:90%;background:#378ADD"></div></div></div>
+      <div class="cpill" onclick="selCanal(this,'e-Vignette')"><div class="cdot" style="background:#1D9E75"></div><div class="cn">e-Vignette</div><div class="cv">213 M</div><div class="cp" style="color:var(--green)">97% objectif</div><div class="pw"><div class="pf" style="width:97%;background:#1D9E75"></div></div></div>
+      <div class="cpill" onclick="selCanal(this,'e-Enregistrement')"><div class="cdot" style="background:#BA7517"></div><div class="cn">e-Enreg.</div><div class="cv">88 M</div><div class="cp" style="color:var(--amber-dark)">88% objectif</div><div class="pw"><div class="pf" style="width:88%;background:#BA7517"></div></div></div>
+      <div class="cpill" onclick="selCanal(this,'TVA directe')"><div class="cdot" style="background:#D4537E"></div><div class="cn">TVA directe</div><div class="cv">370 M</div><div class="cp" style="color:var(--green)">93% objectif</div><div class="pw"><div class="pf" style="width:93%;background:#D4537E"></div></div></div>
+      <div class="cpill" onclick="selCanal(this,'Douanes')"><div class="cdot" style="background:#7F77DD"></div><div class="cn">Douanes</div><div class="cv">280 M</div><div class="cp" style="color:var(--green)">100% objectif</div><div class="pw"><div class="pf" style="width:100%;background:#7F77DD"></div></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ct">Recettes mensuelles (M DJF)</div><div class="chips"><div class="chip on" onclick="switchChart('bar',this)">Barres</div><div class="chip" onclick="switchChart('neutre',this)">Neutre</div></div></div>
+    <div class="mbars" id="mchart"></div>
+    <div class="xlbls"><span class="xl">Jan</span><span class="xl">Fév</span><span class="xl">Mar</span><span class="xl">Avr</span><span class="xl">Mai</span><span class="xl">Juin</span></div>
+    <div class="lgrow"><div class="ldot" style="background:#185FA5"></div><span>Mois en cours (juin)</span><div class="ldot" style="background:#B5D4F4;margin-left:10px"></div><span>Mois passés</span></div>
+  </div>
+  <div><div class="slbl">Dernières transactions</div><div class="txlist" id="txhome"></div></div>
+  <div class="spacer"></div>
+</div>
+</div>
+
+<!-- PAGE TRANSACTIONS -->
+<div id="p-tx" class="page">
+<div class="scroll">
+  <div class="slbl">Toutes les transactions</div>
+  <div class="frow" id="txfilters"></div>
+  <div class="txlist" id="txfull"></div>
+  <div class="spacer"></div>
+</div>
+</div>
+
+<!-- PAGE ALERTES -->
+<div id="p-alerts" class="page">
+<div class="scroll">
+  <div class="slbl">Alertes actives</div>
+  <div style="display:flex;flex-direction:column;gap:8px" id="alist"></div>
+  <div class="slbl" style="margin-top:6px">Performance par canal (S1)</div>
+  <div class="card"><div style="display:flex;flex-direction:column;gap:12px" id="plist"></div></div>
+  <div class="spacer"></div>
+</div>
+</div>
+
+<!-- PAGE GUIDE -->
+<div id="p-guide" class="page">
+<div class="scroll">
+  <div class="slbl">À propos</div>
+  <div style="background:var(--white);border-radius:var(--radius);border:1px solid #e5e7eb;padding:16px">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+      <div style="width:48px;height:48px;border-radius:14px;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:800">D</div>
+      <div><div style="font-size:16px;font-weight:800">Dashboard DGI</div><div style="font-size:12px;color:var(--text2)">Djib Data-AI Consulting · v1.0</div></div>
+    </div>
+    <div style="border-top:1px solid #e5e7eb;padding-top:12px">
+      <div class="irow"><span class="ik">Stagiaire</span><span class="iv">Zahra Aden Houssein</span></div>
+      <div class="irow"><span class="ik">Formation</span><span class="iv">BTS SIO SLAM</span></div>
+      <div class="irow"><span class="ik">Tuteur</span><span class="iv">M. Abdoulaye Sakho</span></div>
+      <div class="irow"><span class="ik">Technologie</span><span class="iv">HTML / CSS / JS</span></div>
+      <div class="irow"><span class="ik">Données</span><span class="iv">Données de l'entreprise</span></div>
+    </div>
+  </div>
+
+  <div class="slbl">Fonctionnalités développées</div>
+  <div style="display:flex;flex-direction:column;gap:7px">
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500">Navigation 4 onglets avec animations</span></div>
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500">Compteurs animés au chargement</span></div>
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500">Carrousel horizontal des canaux fiscaux</span></div>
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500">Graphique barres interactif avec légende</span></div>
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500">Tableau de transactions avec filtres</span></div>
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500">Système d'alertes colorées par gravité</span></div>
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500">Barres de progression animées</span></div>
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500">Bouton FAB flottant + toast notifications</span></div>
+  </div>
+
+  <div class="slbl" style="margin-top:4px">Lexique</div>
+  <div style="display:flex;flex-direction:column;gap:7px">
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500"><strong style="color:#185FA5">DGI</strong> — Direction Générale des Impôts</span></div>
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500"><strong style="color:#185FA5">G2B</strong> — Government to Business</span></div>
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500"><strong style="color:#185FA5">KPI</strong> — Indicateur clé de performance</span></div>
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500"><strong style="color:#185FA5">SIGFiD</strong> — Système Intégré de Gestion Fiscale</span></div>
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500"><strong style="color:#185FA5">DJF</strong> — Franc Djiboutien (1 USD ≈ 177 DJF)</span></div>
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500"><strong style="color:#185FA5">TVA</strong> — Taxe sur la Valeur Ajoutée</span></div>
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500"><strong style="color:#185FA5">Dashboard</strong> — Tableau de bord interactif de visualisation de données</span></div>
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500"><strong style="color:#185FA5">e-Timbre</strong> — Timbre fiscal dématérialisé développé par Djib Data-AI</span></div>
+    <div class="fitem"><div class="fdot"></div><span style="font-size:13px;font-weight:500"><strong style="color:#185FA5">e-Vignette</strong> — Taxe automobile payée en ligne via la plateforme</span></div>
+  </div>
+
+  <!-- Espace pour que le lexique ne soit pas caché par le bouton FAB -->
+  <div class="spacer"></div>
+</div>
+</div>
+
+<!-- Bouton flottant -->
+<div class="fab" onclick="showToast('Export PDF – fonctionnalité à venir')" title="Exporter">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+</div>
+
+<!-- Navigation -->
+<nav class="bnav">
+  <div class="ntab" onclick="goTab('home')">
+    <div style="position:relative;width:22px;height:22px;display:flex;align-items:center;justify-content:center">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="i-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <span class="nlbl" id="l-home" style="color:#185FA5">Accueil</span>
+  </div>
+  <div class="ntab" onclick="goTab('tx')">
+    <div style="position:relative;width:22px;height:22px;display:flex;align-items:center;justify-content:center">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="i-tx"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+    </div>
+    <span class="nlbl" id="l-tx" style="color:#9ca3af">Transactions</span>
+  </div>
+  <div class="ntab" onclick="goTab('alerts')">
+    <div style="position:relative;width:22px;height:22px;display:flex;align-items:center;justify-content:center">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="i-alerts"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <div class="ndot"></div>
+    </div>
+    <span class="nlbl" id="l-alerts" style="color:#9ca3af">Alertes</span>
+  </div>
+  <div class="ntab" onclick="goTab('guide')">
+    <div style="position:relative;width:22px;height:22px;display:flex;align-items:center;justify-content:center">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="i-guide"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <span class="nlbl" id="l-guide" style="color:#9ca3af">Guide</span>
+  </div>
+</nav>
+</div>
+
+<script>
+const MONTHLY=[153,182,161,209,193,228];
+const TX=[
+  {ref:'TX-0821',canal:'e-Timbre',icon:'🧾',bg:'#E6F1FB',contrib:'Société Darar',montant:42000,statut:'Validé',date:'02/06/2025'},
+  {ref:'TX-0820',canal:'e-Vignette',icon:'🚗',bg:'#EAF3DE',contrib:'Hassan Abdi',montant:15000,statut:'Validé',date:'02/06/2025'},
+  {ref:'TX-0819',canal:'TVA',icon:'💼',bg:'#FBEAF0',contrib:'Import Express',montant:280000,statut:'En attente',date:'01/06/2025'},
+  {ref:'TX-0818',canal:'e-Enreg.',icon:'📋',bg:'#FAEEDA',contrib:'Me. Farah',montant:95000,statut:'Validé',date:'01/06/2025'},
+  {ref:'TX-0817',canal:'Douanes',icon:'⚓',bg:'#EEEDFE',contrib:'GoldenTrade',montant:450000,statut:'Validé',date:'31/05/2025'},
+  {ref:'TX-0816',canal:'e-Timbre',icon:'🧾',bg:'#E6F1FB',contrib:'Ali Hussein',montant:8000,statut:'Rejeté',date:'31/05/2025'},
+  {ref:'TX-0815',canal:'TVA',icon:'💼',bg:'#FBEAF0',contrib:'Tech Djibouti',montant:190000,statut:'Validé',date:'30/05/2025'},
+  {ref:'TX-0814',canal:'e-Vignette',icon:'🚗',bg:'#EAF3DE',contrib:'Karim Moussa',montant:12000,statut:'Validé',date:'30/05/2025'},
+  {ref:'TX-0813',canal:'e-Enreg.',icon:'📋',bg:'#FAEEDA',contrib:'SCI Tadjura',montant:210000,statut:'En attente',date:'29/05/2025'},
+  {ref:'TX-0812',canal:'Douanes',icon:'⚓',bg:'#EEEDFE',contrib:'MariTime Co.',montant:620000,statut:'Validé',date:'29/05/2025'},
+];
+const ALERTS=[
+  {bg:'#FCEBEB',icon:'⚠️',txt:'e-Enregistrement : recettes juin –18% sous objectif mensuel.',time:"Aujourd'hui 09:14"},
+  {bg:'#FAEEDA',icon:'🕐',txt:'TVA : 3 entreprises non régularisées depuis plus de 30 jours.',time:'Hier 17:42'},
+  {bg:'#FCEBEB',icon:'🔍',txt:'Fraude suspectée : 2 timbres aux numéros dupliqués détectés.',time:'Hier 11:05'},
+  {bg:'#FAEEDA',icon:'📊',txt:'e-Vignette : pic de transactions non traitées le 31/05.',time:'01/06/2025'},
+  {bg:'#EAF3DE',icon:'✅',txt:"Douanes : objectif T2 atteint à 103%, record de l'exercice.",time:'31/05/2025'},
+];
+const PERF=[
+  {name:'e-Timbre',val:90,col:'#378ADD'},
+  {name:'e-Vignette',val:97,col:'#1D9E75'},
+  {name:'e-Enreg.',val:88,col:'#BA7517'},
+  {name:'TVA',val:93,col:'#D4537E'},
+  {name:'Douanes',val:100,col:'#7F77DD'},
+];
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);
+}
+function animCount(el,target,suf){
+  let v=0;const step=Math.ceil(target/28);
+  const iv=setInterval(()=>{v=Math.min(v+step,target);el.textContent=v.toLocaleString()+suf;if(v>=target)clearInterval(iv);},30);
+}
+function buildChart(){
+  const max=Math.max(...MONTHLY);
+  const mc=document.getElementById('mchart');mc.innerHTML='';
+  MONTHLY.forEach((v,i)=>{
+    const b=document.createElement('div');
+    b.className='mbar';
+    b.style.cssText='width:calc((100% - 15px)/6);background:'+(i===5?'#185FA5':'#B5D4F4')+';height:0;';
+    b.onclick=()=>showToast(['Jan','Fév','Mar','Avr','Mai','Juin'][i]+' : '+v+' M DJF');
+    mc.appendChild(b);
+    setTimeout(()=>{b.style.height=(v/max*42)+'px';},100+i*55);
+  });
+}
+function switchChart(mode,btn){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.mbar').forEach((b,i)=>{
+    b.style.background=mode==='neutre'?'#E6F1FB':(i===5?'#185FA5':'#B5D4F4');
+  });
+}
+function selCanal(el,name){
+  document.querySelectorAll('.cpill').forEach(p=>p.classList.remove('sel'));
+  el.classList.add('sel');showToast(name+' sélectionné');
+}
+function txHTML(tx){
+  const sc={'Validé':'background:#EAF3DE;color:#27500A','En attente':'background:#FAEEDA;color:#633806','Rejeté':'background:#FCEBEB;color:#791F1F'};
+  return '<div class="txi" onclick="showToast(\''+tx.ref+' — '+tx.montant.toLocaleString()+' DJF\')"><div class="txic" style="background:'+tx.bg+'">'+tx.icon+'</div><div class="txin"><div class="txn">'+tx.contrib+'</div><div class="txs">'+tx.canal+' · '+tx.date+'</div></div><div class="txr"><div class="txa">'+(tx.montant/1000).toFixed(0)+'k DJF</div><div class="txb" style="'+sc[tx.statut]+'">'+tx.statut+'</div></div></div>';
+}
+function filterTx(f,btn){
+  document.querySelectorAll('#txfilters .chip').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+  const filtered=f==='Tous'?TX:TX.filter(t=>t.canal===f||t.canal.startsWith(f));
+  document.getElementById('txfull').innerHTML=filtered.length?filtered.map(txHTML).join(''):'<div style="text-align:center;padding:22px;color:#9ca3af;font-size:13px">Aucune transaction trouvée</div>';
+}
+function animAlerts(){
+  document.querySelectorAll('.pbf[data-w]').forEach(el=>{el.style.width=el.dataset.w;});
+}
+const TABS=['home','tx','alerts','guide'];
+function goTab(name){
+  TABS.forEach(k=>{
+    const on=k===name;
+    document.getElementById('p-'+k).classList.toggle('on',on);
+    document.getElementById('l-'+k).style.color=on?'#185FA5':'#9ca3af';
+    document.getElementById('i-'+k).setAttribute('stroke',on?'#185FA5':'#9ca3af');
+  });
+  if(name==='alerts')setTimeout(animAlerts,150);
+}
+
+const canals=['Tous','e-Timbre','e-Vignette','e-Enreg.','TVA','Douanes'];
+document.getElementById('txfilters').innerHTML=canals.map((c,i)=>'<div class="chip '+(i===0?'on':'')+'" onclick="filterTx(\''+c+'\',this)">'+c+'</div>').join('');
+document.getElementById('txfull').innerHTML=TX.map(txHTML).join('');
+document.getElementById('alist').innerHTML=ALERTS.map(a=>'<div class="acard" style="background:'+a.bg+'" onclick="showToast(\'Alerte consultée\')"><div style="font-size:18px;flex-shrink:0;margin-top:1px">'+a.icon+'</div><div><div class="at">'+a.txt+'</div><div class="as">'+a.time+'</div></div></div>').join('');
+document.getElementById('plist').innerHTML=PERF.map(p=>'<div class="pitem"><div class="pname">'+p.name+'</div><div class="pbw"><div class="pbf" style="width:0;background:'+p.col+'" data-w="'+p.val+'%"></div></div><div class="ppct">'+p.val+'%</div></div>').join('');
+animCount(document.getElementById('m1'),1086,' M');
+animCount(document.getElementById('m2'),4832,'');
+animCount(document.getElementById('m3'),94,'%');
+buildChart();
+document.getElementById('txhome').innerHTML=TX.slice(0,4).map(txHTML).join('');
+</script>
+</body>
+</html>
